@@ -1,0 +1,10 @@
+Importar o banco de dados usando Navicat 15 for SQL Server.
+Usar blob container da Azure Storage para hospedar as fotos dos sorteios e carregar rapidamente.
+Usar Azure Web App para hospedar o projeto.
+
+Criar um Azure App Service, usando o "Publish" do VS 2019.
+
+Busque por appsettings.json e edite o CONNECTION_STRING com a string do servidor.
+
+Pronto, o site será colocado no ar imediatamente quando fizer a publicação!
+

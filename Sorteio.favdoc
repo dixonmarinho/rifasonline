@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Favorites xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <folders>
+    <Folder>
+      <name>Javascript</name>
+      <folders />
+      <favorites>
+        <Favorite>
+          <name>ReservarNumero.js</name>
+          <path>Sorteio\wwwroot\js\Pages\Home\ReservarNumero.js</path>
+          <absolutePath>D:\Dev\projetos\vs\2022\Freelance\Vippremios\v1\1.4\Sorteio\wwwroot\js\Pages\Home\ReservarNumero.js</absolutePath>
+          <position>
+            <line>26</line>
+            <column>29</column>
+            <lineHash>kO1bBfkyp9P0YbFyqOVMtg79ypgGKVltzE1lyPVa0Eg=</lineHash>
+          </position>
+        </Favorite>
+      </favorites>
+    </Folder>
+    <Folder>
+      <name>Controller</name>
+      <folders />
+      <favorites>
+        <Favorite>
+          <name>UserController.cs</name>
+          <path>Sorteio\Controllers\UserController.cs</path>
+          <absolutePath>D:\Dev\projetos\vs\2022\Freelance\Vippremios\v1\1.4\Sorteio\Controllers\UserController.cs</absolutePath>
+          <position>
+            <line>30</line>
+            <column>14</column>
+            <lineHash>xJ7Bf68DNreEKmaRiJz2U5pxfTbB6rhuqe8NvewT8MA=</lineHash>
+          </position>
+        </Favorite>
+      </favorites>
+    </Folder>
+    <Folder>
+      <name>Business</name>
+      <folders />
+      <favorites>
+        <Favorite>
+          <name>UsuarioBusiness.cs</name>
+          <path>Sorteio.Domain\Business\UsuarioBusiness.cs</path>
+          <absolutePath>D:\Dev\projetos\vs\2022\Freelance\Vippremios\v1\1.4\Sorteio.Domain\Business\UsuarioBusiness.cs</absolutePath>
+          <position>
+            <line>90</line>
+            <column>30</column>
+          </position>
+        </Favorite>
+      </favorites>
+    </Folder>
+    <Folder>
+      <name>Views</name>
+      <folders />
+      <favorites>
+        <Favorite>
+          <name>Sorteio.cshtml</name>
+          <path>Sorteio\Views\Home\Sorteio.cshtml</path>
+          <absolutePath>D:\Dev\projetos\vs\2022\Freelance\Vippremios\v1\1.4\Sorteio\Views\Home\Sorteio.cshtml</absolutePath>
+          <position>
+            <line>244</line>
+            <column>43</column>
+          </position>
+        </Favorite>
+        <Favorite>
+          <name>ReservaFinish.cshtml</name>
+          <path>Sorteio\Views\Home\ReservaFinish.cshtml</path>
+          <absolutePath>D:\Dev\projetos\vs\2022\Freelance\Vippremios\v1\1.4\Sorteio\Views\Home\ReservaFinish.cshtml</absolutePath>
+          <position>
+            <line>1</line>
+            <column>1</column>
+            <lineHash>OIF2LyApCVqCrdV/Sm5uw/qw9RmCK/Pp9X8Qfc09jOU=</lineHash>
+          </position>
+        </Favorite>
+      </favorites>
+    </Folder>
+  </folders>
+  <favorites />
+</Favorites>

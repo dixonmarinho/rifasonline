@@ -1,0 +1,168 @@
+﻿@{
+    ViewData["Title"] = "Pagamentos";
+    Layout = "_LayoutAcessoInterno";
+
+    @model IEnumerable<Sorteio.Domain.Models.EntityDomain.Sorteio>
+}
+
+<partial name="~/Views/PartialViews/Loading.cshtml" />
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h2 class="title">Pagamentos</h2>
+                </div>
+            </div>
+            <div id="accordion">
+
+                @foreach (var item in Model)
+                {
+                    <div class="card card-custom">
+                        <div class="card-header card-header-custom" id="heading_@item.id_sorteio">
+                            <h5 class="mb-0" style="background-color:black">
+                                <button onclick="ObterParticipantesSorteio('@item.id_sorteio')" class="btn btn-link" data-toggle="collapse" data-target="#collapse_@item.id_sorteio" aria-expanded="true" aria-controls="collapse_@item.id_sorteio">
+                                    @item.nome
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapse_@item.id_sorteio" class="collapse" aria-labelledby="heading_@item.id_sorteio" data-parent="#accordion">
+                            <div class="card-body">
+                                @{
+                                    var idinput = "myinput" + @item.id_sorteio;
+                                    var idclass = "table" + @item.id_sorteio;
+                                }
+                                <div><input type="text" id="@idinput" onkeyup="Search(@item.id_sorteio)" placeholder="Pesquisar."></div>
+                                <table id="@idclass" class="table table-hover table-responsive-sm datatableListaParticipante">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th scope="col">Cod.</th>
+                                            <th scope="col">Participante</th>
+                                            <th scope="col">Celular</th>
+                                            <th scope="col">Numero</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var venda in item.PedidoCollection)
+                                        {
+                                            <tr>
+
+                                                <td>@venda.id_pedido</td>
+                                                <td>@venda.nome</td>
+                                                <td> <a href="@Util.WhatsappLink(venda.celular)"> @venda.celular </a></td>
+                                                <td>
+                                                    @if (venda.id_status_pedido == 2)
+                                                    {
+                                                        <button type="button" class="btn-sm btn-dark" onclick="VisualizarNumerosPorPedido(@venda.id_pedido)">Nº Pedido</button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button type="button" class="btn-sm btn-danger" onclick="VisualizarNumerosPorPedido(@venda.id_pedido)">Reservado</button>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @* Pendente *@
+                                                    @if (venda.id_status_pedido == 1)
+                                                    {
+                                                        <button type="button" class="btn-sm btn-info" onclick="ConfirmarPagamento(@venda.id_pedido)">Ação do Pedido</button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class='btn btn-sm btn-success text-light' onclick="CancelarPagamento(@venda.id_pedido)">Pago <span class="material-icons">thumb_up</span></a>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal Confirmar Pagamento -->
+<div class="modal fade" id="modalConfirmarPagamento" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body pt-0">
+                <input type="hidden" id="idPedidoSelecionado" />
+                <h5 class="title m-0 text-center">Ações do Pedido</h5>
+                @*<p class="text-center">Tem certeza que deseja <text class="font-weight-bold">confirmar o pagamento?</text></p>*@
+                <p class="text-center">Selecione uma ação abaixo</p>
+            </div>
+
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-dark btn-sm" data-dismiss="modal">Sair</button> &#160;
+                <button onclick="ConfirmarPagamentoRecebido()" type="button" class="btn btn-success btn-sm">Confirmar Pagamento</button> &#160;
+                <button onclick="CancelarReserva()" type="button" class="btn btn-danger btn-sm">Cancelar Reserva</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cancelar Numeros Pagos -->
+
+<div class="modal fade" id="modalCancelarPagamento" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body pt-0">
+                <input type="hidden" id="idPedidoSelecionado" />
+                <h5 class="title m-0 text-center">Cancelar Pagamento</h5>
+            </div>
+
+            <div class="modal-footer justify-content-center">
+                <button onclick="CancelarReserva()" type="button" class="btn btn-danger btn-sm">Confirmar Cancelamento</button> &#160;
+                <button type="button" class="btn btn-dark btn-sm" data-dismiss="modal">Sair</button> &#160;
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Visualizar Numeros por Pedido -->
+<div class="modal fade" id="modalVisualizarNumerosPorPedido" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body pt-0">
+                <h4 class="title text-center">Números do Pedido</h4>
+                <div class="row" style="width: 100%; display: flex; flex-direction: row; justify-content: center;">
+                    <div id="numeros-pedido" class="numeros-pedido">
+                        Numeros Aqui
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/Pages/Pagamento/Index.js" asp-append-version="true" type="text/javascript"></script>
+<script src="~/js/Pages/Pagamento/ConfirmarPagamento.js" asp-append-version="true" type="text/javascript"></script>
+<script src="~/js/Pages/Pagamento/VisualizarNumerosPorPedido.js" asp-append-version="true" type="text/javascript"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>

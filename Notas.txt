@@ -1,0 +1,10 @@
+MercadoPago
+-----------
+Public Key  = TEST-e78d1847-e92d-4aab-b560-496eb9f05e39
+Secret Key  = TEST-2544854926573227-030223-4d3205b97bb8d36a1a857fa569d1e392-217441002
+
+
+08/03/2022
+----------
+Exemplo, pagamento com PIX
+https://www.customprime.com.br/sorteios/golf-gti-stage-2

@@ -1,0 +1,279 @@
+﻿@using Sorteio.Common;
+
+@{ ViewData["Title"] = "Acesso Interno";
+    Layout = "_LayoutAcessoInterno"; }
+
+<input type="hidden" id="idUsuarioLogado" value="@ViewBag.UsuarioLogado.id_usuario" />
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12 text-center mb-5">
+                    <h4 class="title mb-0 pb-0">MINHA CONTA</h4>
+                    <div class="divisor"></div>
+                    <span>Seja bem-vindo(a), <span class="nome-usuario font-weight-bold">@ViewBag.UsuarioLogado.nome</span>!</span>
+                </div>
+                <div class="col-md-12 mb-4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <ul class="nav nav-pills nav-pills-rose flex-column">
+                                <li class="nav-item"><a class="nav-link active" href="#tab_meus_bilhetes" data-toggle="tab"><span class="material-icons">confirmation_number</span> &nbsp; Meus bilhetes</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#tab_meus_premio" data-toggle="tab"><span class="material-icons">emoji_events</span> &nbsp; Meus prêmios</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab_meus_bilhetes">
+                                    <h4 class="titulo-cards-perfil">Meus Bilhetes</h4>
+                                    <span class="font-weight-bold">Importante:</span> <span>Os bilhetes reservados só serão cancelados automaticamente ao passar da data de validade!</span>
+
+                                    <div id="accordion">
+                                        @{ var myModel = (IEnumerable<Sorteio.Domain.Models.NotMapped.MeusBilhetes>)ViewBag.MeusBilhetes;
+                                            var query = myModel.GroupBy(x => x.id_pedido);
+                                            var DIA_MAXIMO_PARA_PAGAMENTO = 2;
+
+                                            foreach (var item in query)
+                                            {
+                                                var codigoDoPedido = item.Key;
+                                                var statusBilhete = myModel.Where(x => x.id_pedido == codigoDoPedido).Select(x => x.id_status_pedido).FirstOrDefault();
+                                                var dataCompraBilhete = myModel.Where(x => x.id_pedido == codigoDoPedido).Select(x => x.data_compra_sorteio).FirstOrDefault();
+
+                                <div class="card card-custom">
+                                    <div class="card-header card-header-custom" id="heading_@codigoDoPedido">
+                                        <h5 class="mb-0 mt-0">
+                                            <button onclick="ObterParticipantesSorteio('@codigoDoPedido')" class="btn btn-link" data-toggle="collapse" data-target="#collapse_@codigoDoPedido" aria-expanded="true" aria-controls="collapse_@codigoDoPedido">
+
+                                                @codigoDoPedido.ToString("0000000")
+                                                @if (statusBilhete == DataDictionary.STATUS_PEDIDO_PENDENTE)
+                                                {
+                                <span data-toggle="tooltip" data-placement="top" title="Seu bilhete expira em @dataCompraBilhete.AddDays(DIA_MAXIMO_PARA_PAGAMENTO).ToString("dd/MM/yyyy")" class="material-icons text-warning">alarm</span>}
+
+                                            </button>
+
+                                            @{ if (statusBilhete == DataDictionary.STATUS_PEDIDO_PENDENTE)
+                                                {
+                                                    var valorTotalPagar = myModel.Where(x => x.id_pedido == codigoDoPedido).Sum(x => x.valor); 
+                                                    @*<button class="btn btn-sm btn-warning" onclick="AbrirFormasDePagamento()" style="float: right; margin-right: 10px; margin-top: 10px;">Efetuar Pagamento - R$ @valorTotalPagar</button>*@
+                                                    <button class="btn btn-sm btn-warning" onclick="VisualizarNumerosPorPedido(22)" style="float: right; margin-right: 10px; margin-top: 10px;">Efetuar Pagamento - R$ @valorTotalPagar</button> }
+                                                    else if (statusBilhete == DataDictionary.STATUS_PEDIDO_PAGO)
+                                                    {
+                                                        var valorTotalPagar = myModel.Where(x => x.id_pedido == codigoDoPedido).Sum(x => x.valor);
+                                                        <button class="btn btn-sm btn-success" style="float: right; margin-right: 10px; margin-top: 10px;">Pago - R$ @valorTotalPagar</button> 
+                                                    }
+                                                else if (statusBilhete == DataDictionary.STATUS_PEDIDO_CANCELADO)
+                                                {
+                                <button class="btn btn-sm btn-danger" style="float: right; margin-right: 10px; margin-top: 10px;">Cancelado</button> } }
+                                        </h5>
+                                    </div>
+
+                                    <div id="collapse_@codigoDoPedido" class="collapse" aria-labelledby="heading_@codigoDoPedido" data-parent="#accordion">
+                                        <div class="card-body">
+                                            <table class="datatableMeusBilhetes table table-hover mt-5 text-center">
+                                                <thead class="bg-light">
+                                                    <tr>
+                                                        <th scope="col">Sorteio</th>
+                                                        <th scope="col">Data Compra</th>
+                                                        <th scope="col">Número</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    @foreach (var itensPedido in item)
+                                                    {
+                                    <tr>
+                                        <td>@itensPedido.nome_sorteio</td>
+                                        <td>@itensPedido.data_compra_sorteio.ToString("dd/MM/yyyy")</td>
+                                        <td>@itensPedido.numero</td>
+                                    </tr>
+}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div> } }
+
+
+                                    </div>
+
+                                </div>
+
+                                <div class="tab-pane" id="tab_meus_premio">
+                                    <h4 class="titulo-cards-perfil">Meus Prêmios</h4>
+                                    <span>Aqui você pode ver todos os prêmios que você foi sorteado!</span>
+
+                                    <table class="table table-hover mt-5 text-center" id="datatableMeusPremios">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th scope="col">Sorteio</th>
+                                                <th scope="col">Data Sorteio</th>
+                                                <th scope="col">Número Premiado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in (IEnumerable<Sorteio.Domain.Models.NotMapped.MeusPremios>)ViewBag.MeusPremios)
+                                            {
+                                <tr>
+                                    <td>@item.nome_sorteio</td>
+                                    <td>@item.data_sorteio.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.numero_sorteado</td>
+                                </tr>
+}
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="tab-pane" id="tab_meus_dados">
+                                    <h4 class="titulo-cards-perfil">Meus Dados</h4>
+
+                                    <form>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12 col-sm-12">
+                                                <label for="nome">Nome</label>
+                                                <input value="@ViewBag.UsuarioLogado.nome" type="text" class="form-control" id="nome" name="nome" placeholder="Nome e Sobrenome">
+                                            </div>
+                                            <div class="form-group col-md-6 col-sm-12">
+                                                <label for="cpf">CPF</label>
+                                                <input value="@ViewBag.UsuarioLogado.cpf" type="text" class="form-control" id="cpf" placeholder="000.000.000-00">
+                                            </div>
+                                            <div class="form-group col-md-6 col-sm-12">
+                                                <label for="data_de_nascimento">Data de Nascimento</label>
+                                                <input value="@ViewBag.DataDeNascimento" type="date" class="form-control" id="data_de_nascimento" name="data_de_nascimento">
+                                            </div>
+                                            <div class="form-group col-md-12 col-sm-12">
+                                                <label for="email">Email</label>
+                                                <input value="@ViewBag.UsuarioLogado.email" type="email" class="form-control" id="email" name="email" placeholder="email@email.com">
+                                            </div>
+                                            <div class="form-group col-md-12 col-sm-12">
+                                                <label for="telefone">Telefone/Celular</label>
+                                                <input value="@ViewBag.UsuarioLogado.celular" type="text" class="form-control" id="telefone" name="telefone" placeholder="(00) 00000-0000">
+                                            </div>
+                                            <div class="form-group col-md-4 col-sm-12">
+                                                <label for="cep">CEP</label>
+                                                <input value="@ViewBag.UsuarioLogado.cep" type="text" class="form-control" id="cep" name="cep" placeholder="00000-000">
+                                            </div>
+                                            <div class="form-group col-md-4 col-sm-12">
+                                                <label for="logadouro">Logadouro</label>
+                                                <input value="@ViewBag.UsuarioLogado.logadouro" type="text" class="form-control" id="logadouro" name="logadouro" placeholder="Rua, Avenida">
+                                            </div>
+                                            <div class="form-group col-md-4 col-sm-12">
+                                                <label for="numero">Número</label>
+                                                <input value="@ViewBag.UsuarioLogado.numero" type="text" class="form-control" id="numero" name="numero" placeholder="00000">
+                                            </div>
+                                            <div class="form-group col-md-12 col-sm-12">
+                                                <label for="bairro">Bairro</label>
+                                                <input value="@ViewBag.UsuarioLogado.bairro" type="text" class="form-control" id="bairro" name="bairro" placeholder="Meu bairro">
+                                            </div>
+                                            <div class="form-group col-md-12 col-sm-12">
+                                                <label for="complemento">Complemento</label>
+                                                <input value="@ViewBag.UsuarioLogado.complemento" type="text" class="form-control" id="complemento" name="complemento" placeholder="Casa, apartamento">
+                                            </div>
+                                            <div class="form-group col-md-12 col-sm-12">
+                                                <label for="estado">Estado</label>
+                                                <input value="@ViewBag.UsuarioLogado.estado" type="text" class="form-control" id="estado" name="estado" placeholder="Meu estado">
+                                            </div>
+                                            <div class="form-group col-md-12 col-sm-12">
+                                                <label for="cidade">Cidade</label>
+                                                <input value="@ViewBag.UsuarioLogado.cidade" type="text" class="form-control" id="cidade" name="cidade" placeholder="Minha Cidade">
+                                            </div>
+                                            <div class="form-group col-md-12 col-sm-12">
+                                                <label for="referencia">Referência</label>
+                                                <input value="@ViewBag.UsuarioLogado.referencia" type="text" class="form-control" id="referencia" name="referencia" placeholder="Próximo a ...">
+                                            </div>
+                                        </div>
+                                        <a onclick="AtualizarDadosCliente()" class="btn btn-sm btn-dark text-light">Atualizar</a>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Formas de Pagamento -->
+<div class="modal fade" id="modalFormasDePagamento" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body pt-0 text-center">
+                <h4 class="title">Formas de Pagamento</h4>
+
+                <div class="row">
+                    @foreach (var item in (IEnumerable<Sorteio.Domain.Models.Body.FormaDePagamentoBody>)ViewBag.FormasDePagamentos)
+                    {
+                        if (item.id_tipo_forma_de_pagamento == DataDictionary.CODIGO_PIX)
+                        {
+        <div class="col-md-6">
+            <div class="card card-forma-de-pagamento">
+                <img class="card-img-top" style="background: url('@item.url_imagem'); width: 100%; height: 200px; background-position: center; background-size: contain; background-repeat: no-repeat; ">
+                <div class="card-body dados-banco text-center">
+                    <h4 class="title">@item.nome_banco</h4>
+                    <h6><strong>Tipo:</strong> @item.nome_tipo_forma_de_pagamento</h6>
+                    <h6><strong>Chave:</strong> @item.pix</h6>
+                    <h6><strong>Favorecido:</strong> @item.favorecido</h6>
+                </div>
+            </div>
+        </div> }
+    else
+    {
+<div class="col-md-6">
+    <div class="card card-forma-de-pagamento">
+        <img class="card-img-top" style="background: url('@item.url_imagem'); width: 100%; height: 200px; background-position: center; background-size: contain; background-repeat: no-repeat; ">
+        <div class="card-body dados-banco text-center">
+            <h4 class="title">@item.nome_banco</h4>
+            <h6><strong>Tipo:</strong> @item.nome_tipo_forma_de_pagamento</h6>
+            <h6><strong>Cód Banco:</strong> @item.codigo_banco</h6>
+            <h6><strong>Favorecido:</strong> @item.favorecido</h6>
+            <h6><strong>CPF:</strong> @item.cpf</h6>
+            <h6><strong>Agência:</strong> @item.agencia</h6>
+            <h6><strong>Conta:</strong> @item.conta</h6>
+        </div>
+    </div>
+</div>}
+
+}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Visualizar Numeros por Pedido -->
+<div class="modal fade" id="modalVisualizarNumerosPorPedido" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body pt-0">
+                <h7 class="title text-center">NÚMEROS RESERVADOS</h7>
+                <h6 class="title text-center">Após efetuar o pagamento, envie o comprovante e o número do pedido para validarmos seu bilhete!</h6>
+                <div class="row" style="width: 100%; display: flex; flex-direction: row; justify-content: center;">
+                    <div id="numeros-pedido" class="numeros-pedido">
+                        Numeros Aqui
+                    </div>
+                </div>
+                <div>
+                    <a onclick="AbrirFormasDePagamento()" class="btn btn-danger" style="display: flex; justify-content: center; align-content:center; height:40px"><span class="glyphicon glyphicon-ok"></span> Formas de Pagamento</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/Pages/Pagamento/VisualizarNumerosPorPedido.js" asp-append-version="true" type="text/javascript"></script>
+<script src="~/js/Pages/AcessoInterno/Index.js" type="text/javascript" asp-append-version="true"></script>
+<script src="~/js/Pages/AcessoInterno/AtualizarDadosCliente.js" type="text/javascript" asp-append-version="true"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
